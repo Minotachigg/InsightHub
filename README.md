@@ -1,0 +1,2 @@
+# InsightHub
+A blogging website
