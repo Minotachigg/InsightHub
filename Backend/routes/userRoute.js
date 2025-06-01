@@ -1,0 +1,20 @@
+const express = require('express')
+const router = express.Router()
+const { postUser, postEmailConfirmation, signIn, forgetPassword, resetPassword, userList, userDetails, signOut, requireSignin, deleteUser, updateUser, requireAdmin, bookmarkBlog, getBookmarkedBlogs, removeBookmarked, requireUser } = require('../controllers/userController')
+const { userValidation, passwordValidation, validation } = require('../validation/validator')
+
+router.post('/register', userValidation, passwordValidation, validation, postUser)
+router.post('/confirmation/:token', postEmailConfirmation)
+router.post('/signin', signIn)
+router.post('/forgetpassword', forgetPassword)
+router.put('/resetpassword/:token', passwordValidation, validation, resetPassword)
+router.get('/userlist', requireSignin, requireAdmin, userList)
+router.get('/userdetails/:id', requireSignin, userDetails)
+router.post('/signout', signOut)
+// router.delete('/deleteuser/:id', requireSignin, requireAdmin, deleteUser)
+// router.put('/updateuser/:id', requireSignin, updateUser)
+router.put('/users/:userId/bookmark/:blogId', requireSignin, requireUser, bookmarkBlog)
+router.get('/users/:userId/bookmarks', requireSignin, getBookmarkedBlogs)
+router.delete('/users/:userId/remove/:blogId', requireSignin, removeBookmarked)
+
+module.exports = router
