@@ -8,6 +8,7 @@ import Profile from './pages/Profile'
 import Write from './pages/Write'
 import EmailVerify from './auth/EmailVerify'
 import AdminRoute from './auth/AdminRoute'
+import PrivateRoute from './auth/PrivateRoute'
 import Dashboard from './admin/Dashboard'
 import AddTopic from './admin/AddTopic'
 import Topics from './admin/Topics'
@@ -30,21 +31,26 @@ const MyRoute = () => {
                 <Route path="/" element={<Layouts />}>
                     <Route index element={<Landing />} />
                     <Route path="blog/:blogId" element={<BlogDetails />} />
-                    <Route path='exploretopics' element={<TopicList />} />
                 </Route>
-                <Route path="home" element={<HomePage />} />
-                <Route path="write" element={<Write />} />
-                <Route path="profile/*" element={<Profile />} />
+
                 <Route path="signin" element={<Login />} />
                 <Route path="register" element={<Register />} />
                 <Route path="forgotpassword" element={<ForgotPasswordPage />} />
                 <Route path="resetpassword/:token" element={<ResetPasswordPage />} />
-            
-                {/* Protected routes */}
-                <Route path="email/confirmation/:token" element={<EmailVerify />} />
-                <Route path='tag/blogs' element={<TopicBlogs />} />
-                <Route path='edit/:blogId' element={<EditBlog/>} />
-                <Route path='/*' element={<NotFound />} />
+
+                {/* Protected routes wrapped in PrivateRoute */}
+                <Route element={<PrivateRoute />}>
+                    <Route path="home" element={<HomePage />} />
+                    <Route path="write" element={<Write />} />
+                    <Route path="profile/*" element={<Profile />} />
+                    <Route path="email/confirmation/:token" element={<EmailVerify />} />
+                    <Route path='tag/blogs' element={<TopicBlogs />} />
+                    <Route path='edit/:blogId' element={<EditBlog />} />
+
+                    <Route path="/" element={<Layouts />}>
+                        <Route path='exploretopics' element={<TopicList />} />
+                    </Route>
+                </Route>
 
                 {/* Admin routes */}
                 <Route path="/admin" element={<AdminRoute />}>
@@ -54,8 +60,12 @@ const MyRoute = () => {
                     <Route path='users' element={<UserList />} />
                     <Route path="bloglist" element={<Bloglist />} />
                 </Route>
+
+                {/* Catch all */}
+                <Route path="/*" element={<NotFound />} />
             </Routes>
         </Router>
+
     )
 }
 

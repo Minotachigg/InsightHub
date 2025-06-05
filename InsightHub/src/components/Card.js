@@ -90,10 +90,13 @@ const Card = ({ activeTopic }) => {
               <div key={i} className="border-bottom py-4">
                 {/* Header */}
                 <div className="d-flex align-items-center mb-3">
-                  <ProfileIcon name={blog.author.name} style={{ fontSize: '15px', width: '1.5rem', height: '1.5rem' }} />
-                  <span className="ms-2 fw-semibold text-capitalize">
-                    {blog.author.name} in {blog.topic.topic_name}
-                  </span>
+                  <Link to={`/profile/${blog.author._id}`} className='d-flex align-items-center text-decoration-none text-dark'>
+                    <ProfileIcon name={blog.author.name} style={{ fontSize: '15px', width: '1.5rem', height: '1.5rem' }} />
+                    <span className="ms-2 fw-semibold text-capitalize">
+                      {blog.author.name} 
+                    </span>
+                  </Link>
+                  <span> &nbsp; - &nbsp;  {blog.topic.topic_name}</span>
                 </div>
 
                 {/* Blog Body */}

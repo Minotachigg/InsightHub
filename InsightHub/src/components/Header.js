@@ -90,9 +90,8 @@ const Header = () => {
                                     )}
                                     {user.role === 0 && (
                                         <li style={{ fontSize: '0.9rem' }}>
-                                            <Link className="dropdown-item" to="/profile">Profile</Link>
-                                            <Link className="dropdown-item" to="/profile/bookmarks">Bookmarks</Link>
-                                            <Link className="dropdown-item mb-1" to="/profile/edit">Edit Profile</Link>
+                                            <Link className="dropdown-item" to={`/profile/${user._id}`}>Profile</Link>
+                                            <Link className="dropdown-item" to={`/profile/${user._id}/bookmarks`}>Bookmarks</Link>
                                         </li>
                                     )}
                                     <li>
