@@ -1,10 +1,18 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import axios from 'axios'
-import { API, IMG_URL } from '../config'
+import { API } from '../config'
 import Header from '../components/Header'
 import { isAuthenticated } from '../auth'
 import { toast, ToastContainer } from 'react-toastify'
-import { useParams, useNavigate, NavLink } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
+import { useEditor, EditorContent } from '@tiptap/react'
+import StarterKit from '@tiptap/starter-kit'
+import Image from '@tiptap/extension-image'
+import Placeholder from '@tiptap/extension-placeholder'
+import Underline from '@tiptap/extension-underline'
+import Highlight from '@tiptap/extension-highlight'
+import { FaImage } from "react-icons/fa"
+import { PiHighlighterDuotone } from "react-icons/pi"
 
 const EditBlog = () => {
     const { blogId } = useParams()
@@ -12,18 +20,33 @@ const EditBlog = () => {
     const [title, setTitle] = useState('')
     const [topic, setTopic] = useState('')
     const [topicList, setTopicList] = useState([])
-    const contentBoxRef = useRef(null)
-    const fileInputRef = useRef()
     const [fileQueue, setFileQueue] = useState([])
-    const [existingImages, setExistingImages] = useState([])
+    const fileInputRef = useRef()
     const { user } = isAuthenticated()
+    const [initialContent, setInitialContent] = useState('')
 
-    // Fetch topics and blog data
+    // Editor instance
+    const editor = useEditor({
+        extensions: [
+            StarterKit,
+            Image,
+            Placeholder.configure({
+                placeholder: 'Tell your story...',
+                emptyEditorClass: 'is-editor-empty',
+                showOnlyWhenEditable: true,
+            }),
+            Underline,
+            Highlight.configure({ multicolor: true })
+        ],
+        content: '',
+    })
+
+    // Fetch topic list
     useEffect(() => {
         const fetchTopics = async () => {
             try {
-                const response = await axios.get(`${API}/topiclist`)
-                setTopicList(response.data)
+                const res = await axios.get(`${API}/topiclist`)
+                setTopicList(res.data)
             } catch (err) {
                 console.error("Error fetching topics:", err)
             }
@@ -31,29 +54,14 @@ const EditBlog = () => {
         fetchTopics()
     }, [])
 
-    // Fetch blog data for editing
+    // Fetch blog data (remove editor from dependency array!)
     useEffect(() => {
         const fetchBlog = async () => {
             try {
                 const res = await axios.get(`${API}/blogdetails/${blogId}`)
                 setTitle(res.data.title)
                 setTopic(res.data.topic?._id || '')
-                // Convert content array to HTML for editing
-                if (contentBoxRef.current && Array.isArray(res.data.content)) {
-                    const tempExistingImages = []
-                    const html = res.data.content.map(block => {
-                        if (block.content_text) {
-                            return `<p>${block.content_text}</p>`
-                        } else if (block.files_url) {
-                            tempExistingImages.push(block.files_url)
-                            return `<img src="${IMG_URL}/${block.files_url}" class="img-fluid" style="max-width: 100% height: auto border-radius: 8px" />`
-                        } else {
-                            return ''
-                        }
-                    }).join('')
-                    setExistingImages(tempExistingImages)
-                    contentBoxRef.current.innerHTML = html
-                }
+                setInitialContent(res.data.content)
             } catch (err) {
                 toast.error('Failed to load blog for editing')
             }
@@ -61,87 +69,63 @@ const EditBlog = () => {
         fetchBlog()
     }, [blogId])
 
-    // Handle file input changes (when a file is selected)
-    const handleFileChange = (e) => {
-        const file = e.target.files[0]
-        if (file) {
-            const imageUrl = URL.createObjectURL(file)
-            const imgElement = `<img src="${imageUrl}" class="img-fluid" style="max-width: 100% height: auto border-radius: 8px" />`
-            const contentBox = contentBoxRef.current
-            contentBox.innerHTML += imgElement
-            setFileQueue((prev) => [...prev, file])
+    // Set blog content in the editor
+    useEffect(() => {
+        if (editor && initialContent) {
+            editor.commands.setContent(initialContent)
         }
+    }, [editor, initialContent])
+
+    const handleFileChange = async (e) => {
+        const file = e.target.files[0]
+        if (!file) return
+
+        const formData = new FormData()
+        formData.append('image', file)
+
+        try {
+            const response = await axios.post(`${API}/uploadImage`, formData, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            })
+
+            const imageUrl = response.data.url
+            editor?.chain().focus().setImage({ src: imageUrl }).run()
+            setFileQueue(prev => [...prev, file])
+        } catch (error) {
+            toast.error('Image upload failed')
+        }
+
+        e.target.value = null
     }
 
-    // Handle form submission
     const handleSubmit = async (e) => {
-        if (e && e.preventDefault) e.preventDefault()
+        e.preventDefault()
 
-        if (window.confirm('Are you sure you want to update this blog?')) {
+        const confirmed = window.confirm("Are you sure you want to update this blog?")
+        if (!confirmed) return
 
-            const contentBox = contentBoxRef.current
-            const contentText = contentBox.innerText.trim()
-            const children = Array.from(contentBox.childNodes)
-            const contentData = []
 
-            if (!title || !title.trim()) {
-                toast.error("Title cannot be empty.")
-                return
-            }
-            if (!topic || !topic.trim()) {
-                toast.error("Please select a topic.")
-                return
-            }
-            if (!contentText) {
-                toast.error("Content cannot be empty.")
-                return
-            }
+        if (!title.trim()) return toast.error('Title is required')
+        if (!topic.trim()) return toast.error('Please select a topic')
+        if (!editor || editor.getHTML() === '<p></p>') {
+            return toast.error('Content cannot be empty')
+        }
 
-            let fileIndex = 0
-            for (let node of children) {
-                if (node.nodeType === Node.TEXT_NODE) {
-                    const text = node.textContent.trim()
-                    if (text) contentData.push({ type: 'text', value: text })
-                } else if (node.nodeName === 'P' || node.nodeName === 'DIV') {
-                    const text = node.innerText.trim()
-                    if (text) contentData.push({ type: 'text', value: text })
-                } else if (node.nodeName === 'IMG') {
-                    const src = node.getAttribute('src')
-                    if (src.startsWith('blob:')) {
-                        // New image
-                        contentData.push({ type: 'file' })
-                    } else if (src.startsWith(IMG_URL)) {
-                        // Existing image
-                        const files_url = src.replace(`${IMG_URL}/`, '')
-                        contentData.push({ files_url })
-                    }
-                }
-            }
+        const formData = new FormData()
+        formData.append('title', title)
+        formData.append('topic', topic)
+        formData.append('author', user?._id || '')
+        formData.append('content_html', editor.getHTML())
+        fileQueue.forEach(file => formData.append('files', file))
 
-            const formData = new FormData()
-            formData.append('title', title)
-            formData.append('topic', topic)
-            formData.append('author', user?._id || '')
-
-            for (let file of fileQueue) {
-                formData.append('files', file)
-            }
-
-            formData.append('content_data', JSON.stringify(contentData))
-            formData.append('content_html', contentBox.innerHTML)
-
-            try {
-                await axios.put(`${API}/updateblog/${blogId}`, formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                    },
-                })
-                toast.success('Blog updated successfully!')
-                setTimeout(() => navigate(`/blog/${blogId}`), 1000)
-            } catch (err) {
-                console.error(err)
-                toast.error('Error updating blog')
-            }
+        try {
+            await axios.put(`${API}/updateblog/${blogId}`, formData, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            })
+            toast.success('Blog updated successfully!')
+            setTimeout(() => navigate(`/blog/${blogId}`), 1000)
+        } catch (err) {
+            toast.error('Error updating blog')
         }
     }
 
@@ -165,9 +149,7 @@ const EditBlog = () => {
                         >
                             <option value="" disabled>Select a topic</option>
                             {topicList.map((item) => (
-                                <option key={item._id} value={item._id}> 
-                                    {item.topic_name}
-                                </option>
+                                <option key={item._id} value={item._id}>{item.topic_name}</option>
                             ))}
                         </select>
                     </div>
@@ -190,43 +172,31 @@ const EditBlog = () => {
                         ></textarea>
                     </div>
 
-                    {/* Content Box */}
+                    {/* Editor */}
                     <div className="form-group mb-4 position-relative">
-                        <label htmlFor="content" className="text-muted position-absolute fst-italic" style={{ left: '-6rem', top: '0%', transform: 'translateY(-50%)' }}>
+                        <label className="text-muted position-absolute fst-italic" style={{ left: '-6rem', top: '0%', transform: 'translateY(-50%)' }}>
                             Content Start
                         </label>
-                        <div
-                            id='content'
-                            className="content-box form-control px-5 border-0"
-                            contentEditable
-                            ref={contentBoxRef}
-                            data-placeholder="Tell your story..."
-                            style={{
-                                minHeight: '20px',
-                                padding: '10px',
-                                whiteSpace: 'pre-wrap',
-                                wordBreak: 'break-word',
-                                borderRadius: '8px',
-                                position: 'relative',
-                            }}
-                        ></div>
+                        <div className="content-box px-5 border-0" style={{ minHeight: '2rem', padding: '10px' }}>
+                            <EditorContent editor={editor} />
+                        </div>
                     </div>
 
-                    {/* Formatting Toolbar */}
+                    {/* Toolbar */}
                     <div className="d-flex gap-2 mb-3 sticky-top py-2" style={{ zIndex: 10 }}>
                         <button type="button" className="btn btn-sm btn-outline-dark" onClick={() => fileInputRef.current.click()}>
-                            + Add Image
+                            <FaImage size={25} />
                         </button>
-                        <input
-                            type="file"
-                            ref={fileInputRef}
-                            style={{ display: 'none' }}
-                            accept="image/*"
-                            onChange={handleFileChange}
-                        />
+                        <input type="file" ref={fileInputRef} style={{ display: 'none' }} accept="image/*" onChange={handleFileChange} />
+                        <button type="button" className="btn btn-sm btn-outline-dark px-3 fs-5" onClick={() => editor?.chain().focus().toggleBold().run()}> <b>B</b> </button>
+                        <button type="button" className="btn btn-sm btn-outline-dark px-3 fs-5" onClick={() => editor?.chain().focus().toggleItalic().run()}> <em>I</em> </button>
+                        <button type="button" className="btn btn-sm btn-outline-dark px-3 fs-5" onClick={() => editor?.chain().focus().toggleUnderline().run()}> <u>U</u> </button>
+                        <button type="button" className="btn btn-sm btn-outline-dark px-3 bg-warning" onClick={() => editor?.chain().focus().toggleHighlight({ color: '#FFFF00' }).run()}>
+                            <PiHighlighterDuotone size={25} />
+                        </button>
                     </div>
-                    <div className='my-3 py-3 text-center border-top'>
 
+                    <div className="my-3 py-3 text-center border-top">
                         <button className="btn btn-primary" type="submit">Update Blog</button>
                     </div>
                 </form>

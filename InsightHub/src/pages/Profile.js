@@ -26,26 +26,24 @@ const Profile = () => {
                     <div className="col-12 col-lg-8 pe-lg-5" style={{ paddingRight: '50px' }}>
                         <div className=" pt-2 px-5">
                             <div className=' shadow-sm rounded-3 mb-4'
-                            style={{
-                                backgroundImage: 'linear-gradient(to bottom,rgba(204, 204, 204, 0.31),rgba(223, 223, 223, 0.47))',
-                                width: '100%',
-                                height: '5rem',
-                                borderRadius: '1rem',
-                            }}>
+                                style={{
+                                    backgroundImage: 'linear-gradient(to bottom,rgba(204, 204, 204, 0.31),rgba(223, 223, 223, 0.47))',
+                                    width: '100%',
+                                    height: '5rem',
+                                    borderRadius: '1rem',
+                                }}>
 
                             </div>
 
-
-                            {/* Tabs */}
                             {/* Tabs */}
                             <ul className="nav nav-tabs mb-3 position-sticky top-0 z-1">
-                                <li className="nav-item me-3">
-                                    <Link to="/profile" className={`profile-link nav-link text-dark border-0 ${currentTab === 'home' ? 'active' : ''}`} >
+                                <li className="nav-item me-1">
+                                    <Link to="/profile" className={`profile-link bg-transparent nav-link text-dark border-0 ${currentTab === 'home' ? 'active' : ''}`} >
                                         Home
                                     </Link>
                                 </li>
-                                <li className="nav-item ms-3">
-                                    <Link to="/profile/bookmarks" className={`profile-link nav-link text-dark border-0 ${currentTab === 'bookmarks' ? 'active' : ''}`} >
+                                <li className="nav-item ms-2">
+                                    <Link to="/profile/bookmarks" className={`profile-link bg-transparent nav-link text-dark border-0 ${currentTab === 'bookmarks' ? 'active' : ''}`} >
                                         Reading List
                                     </Link>
                                 </li>
@@ -85,7 +83,7 @@ const Profile = () => {
                         </div>
 
                         <div className="p-4">
-                            <Footer className="justify-content-between" style={{ fontSize: '12px'}} />
+                            <Footer className="justify-content-between" style={{ fontSize: '12px' }} />
                         </div>
                     </div>
 

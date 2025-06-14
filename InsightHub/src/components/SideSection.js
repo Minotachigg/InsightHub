@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { CiBookmarkPlus } from "react-icons/ci"
+import { FaRegBookmark } from "react-icons/fa"
 import { API } from '../config'
 import axios from 'axios'
 import ProfileIcon from './ProfileIcon'
@@ -80,7 +80,7 @@ const SideSection = () => {
 
                 {/* Info Text */}
                 <div className="alert alert-info">
-                    <span>Click the <CiBookmarkPlus className='fs-4' /> on any story to easily add it to your reading list or a custom list that you can share.</span>
+                    <span>Click the &nbsp; <FaRegBookmark size={18} className='fs-4' /> &nbsp; on any story to easily add it to your reading list or your bookmark list</span>
                 </div>
             </div>
         </>

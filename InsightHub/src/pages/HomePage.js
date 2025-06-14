@@ -25,7 +25,7 @@ const HomePage = () => {
   }, [])
 
   const handleTopicSelect = (topicId) => {
-    setActiveTopic(topicId) // Update active topic when a new topic is selected
+    setActiveTopic(topicId) 
   }
 
   return (
@@ -37,12 +37,11 @@ const HomePage = () => {
           {/* Left section with TopicSlider + Card */}
           <div className="col-12 col-lg-8" style={{ paddingRight: '50px' }}>
             {/* Sticky Topic Slider */}
-            <div className="position-sticky z-1 py-2" style={{ backgroundColor: 'transparent' }}>
+            <div className="position-sticky py-2" style={{ backgroundColor: '#f9fafb', top: '0', zIndex:'1000' }}>
               <TopicSlider topics={topics} onTopicSelect={handleTopicSelect} activeTopic={activeTopic} itemClassName={' topic-link border-bottom'} />
             </div>
 
-            {/* Scrollable blog cards below */}
-            <Card activeTopic={activeTopic} /> {/* Pass activeTopic prop to Card */}
+            <Card activeTopic={activeTopic} /> 
           </div>
 
           {/* Right Sidebar */}

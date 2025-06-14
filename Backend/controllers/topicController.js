@@ -59,7 +59,7 @@ exports.updateTopic = async (req, res)=>{
 
 // TO DELETE TOPIC
 exports.deleteTopic = (req, res)=>{
-    Topic.findByIdAndUpdate(req.params.id)
+    Topic.findByIdAndDelete(req.params.id)
     .then(topic=>{
         if(!topic){
             return res.status(404).json({error: 'Topic not found.'})

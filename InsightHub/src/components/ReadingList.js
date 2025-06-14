@@ -3,23 +3,23 @@ import axios from 'axios'
 import { Link } from 'react-router-dom'
 import { API, IMG_URL } from '../config'
 import { isAuthenticated } from '../auth'
-import { GoBookmarkSlashFill } from "react-icons/go"
+import { GoBookmarkSlash  } from "react-icons/go"
 import { toast, ToastContainer } from 'react-toastify'
 
 const BookmarkedBlogs = () => {
-    const [bookmarkedBlogs, setBookmarkedBlogs] = useState([]) || [] // State to hold user's bookmarked blogs
-    const { user, token } = isAuthenticated() // Get authenticated user and token
+    const [bookmarkedBlogs, setBookmarkedBlogs] = useState([])
+    const { user, token } = isAuthenticated() 
 
-    // Fetch bookmarked blogs created by the user, only when user is authenticated
+    // Fetch bookmarked blogs 
     useEffect(() => {
         if (user && user._id) {
             axios.get(`${API}/users/${user._id}/bookmarks`, {
                 headers: { Authorization: `Bearer ${token}` },
             })
-                .then((res) => setBookmarkedBlogs(res.data)) // Set the fetched bookmarked blogs
+                .then((res) => setBookmarkedBlogs(res.data))
                 .catch(() => console.log('Failed to fetch your bookmarked blogs'))
         }
-    }, [user._id, token]) // Only trigger this effect when user._id or token changes
+    }, [user, token]) 
 
     const handleUnbookmark = (blogId) => {
         if (window.confirm('Are you sure you want to remove this blog from bookmarks?')) {
@@ -29,11 +29,12 @@ const BookmarkedBlogs = () => {
                 },
             })
                 .then(() => {
-                    setBookmarkedBlogs(bookmarkedBlogs.filter(blog => blog._id !== blogId)) // Remove unbookmarked blog from state
+                    // Remove unbookmarked blog from state
+                    setBookmarkedBlogs(bookmarkedBlogs.filter(blog => blog._id !== blogId)) 
                     toast.success('Blog removed from bookmarks successfully!')
                 })
                 .catch((err) => {
-                    console.error(err) // Log error if unbookmarking fails
+                    console.error(err)
                     alert('Failed to remove the blog from bookmarks')
                 })
         }
@@ -45,10 +46,12 @@ const BookmarkedBlogs = () => {
             <div>
                 {bookmarkedBlogs.length > 0 ? (
                     bookmarkedBlogs.map((blog, i) => {
+                        // Check if blog is valid
                         const previewText = blog.content
                             ? blog.content.replace(/<[^>]*>?/gm, '').slice(0, 100)
                             : ''
 
+                        // Extract the first image from the blog content
                         const firstImageMatch = blog.content
                             ? blog.content.match(/<img[^>]+src=["']([^"'>]+)["']/)
                             : null
@@ -96,7 +99,7 @@ const BookmarkedBlogs = () => {
                                         title="Remove from bookmarks"
                                         onClick={() => handleUnbookmark(blog._id)}
                                     >
-                                        <GoBookmarkSlashFill size={22} />
+                                        <GoBookmarkSlash  size={22} />
                                     </button>
                                 </div>
                             </div>

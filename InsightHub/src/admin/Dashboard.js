@@ -13,7 +13,7 @@ const Dashboard = () => {
         {/* <!-- Admin Info --> */}
         <div className="admin-info">
           <span>Welcome, <strong>Admin</strong></span>
-          <ProfileIcon />
+          <ProfileIcon name={user.name}/>
         </div>
 
         {/* <!-- Dashboard Cards --> */}

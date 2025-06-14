@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { FaBars, FaUsers } from "react-icons/fa"
-import { IoSpeedometerOutline, IoSettingsOutline } from "react-icons/io5"
+import { IoSpeedometerOutline } from "react-icons/io5"
 import { GrArticle } from "react-icons/gr"
-import { MdOutlineFormatColorText, MdOutlineTextIncrease, MdOutlineComment, MdLogout } from "react-icons/md"
+import { MdOutlineFormatColorText, MdOutlineTextIncrease, MdLogout } from "react-icons/md"
 import { signout } from '../auth'
 
 const AdminSidebar = () => {
@@ -34,22 +34,22 @@ const AdminSidebar = () => {
 
                 {/* Using NavLink for active route styling */}
                 <NavLink to="/admin/dashboard" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
-                    <IoSpeedometerOutline /><span className="nav-label">Dashboard</span>
+                    <IoSpeedometerOutline size={20}/><span className="nav-label">Dashboard</span>
                 </NavLink>
                 <NavLink to="/admin/bloglist" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
-                    <GrArticle /> <span className="nav-label">Blogs</span>
+                    <GrArticle size={20}/> <span className="nav-label">Blogs</span>
                 </NavLink>
-                <NavLink to="/admin/topics" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
-                    <MdOutlineFormatColorText /> <span className="nav-label">Topics</span>
+                <NavLink to="/admin/topiclist" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
+                    <MdOutlineFormatColorText size={20}/> <span className="nav-label">Topics</span>
                 </NavLink>
                 <NavLink to="/admin/addtopic" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
-                    <MdOutlineTextIncrease /> <span className="nav-label">Add Topic</span>
+                    <MdOutlineTextIncrease size={20}/> <span className="nav-label">Add Topic</span>
                 </NavLink>
                 <NavLink to="/admin/users" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
-                    <FaUsers /> <span className="nav-label">Users</span>
+                    <FaUsers size={20}/> <span className="nav-label">Users</span>
                 </NavLink>
                 <NavLink to="/signin"  className="nav-link" onClick={handleLogout}>
-                    <MdLogout /> <span className="nav-label">Logout</span>
+                    <MdLogout size={20}/> <span className="nav-label">Logout</span>
                 </NavLink>
             </div>
 

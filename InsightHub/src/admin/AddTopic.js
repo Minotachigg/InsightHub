@@ -52,25 +52,33 @@ const AddTopic = () => {
         <>
             <div className="wrapper d-flex align-items-stretch w-100">
                 <AdminSidebar />
-                <div className='container'>
-                    <div className='row d-flex justify-content-center'>
-                        <div className='col-md-6'>
-                            <form action="">
-                                <h2 className='text-center'>Add Topic</h2>
-                                {showError()}
-                                {showSuccess()}
-                                <div className='my-3'>
-                                    <label htmlFor="topic">Topic Name</label>
-                                    <input type="text" name='topic' id='topic' className='form-control' onChange={handleChange} value={topic_name}/>
-                                </div>
-                                <div className='mt-3'>
-                                    <button className='btn btn-primary' onClick={handlleSubmit}>Add Topic</button>
-                                </div>
-                            </form>
-                        </div>
+                <main className="content p-4 w-50">
+                    <div className='mt-5' style={{ marginLeft: "50%" }}>
+                        <form action="">
+                            <h2 className="text-center">Add Topic</h2>
+                            {showError()}
+                            {showSuccess()}
+                            <div className="my-3">
+                                <label htmlFor="topic">Topic Name</label>
+                                <input
+                                    type="text"
+                                    name="topic"
+                                    id="topic"
+                                    className="form-control"
+                                    onChange={handleChange}
+                                    value={topic_name}
+                                />
+                            </div>
+                            <div className="mt-3">
+                                <button className="btn btn-primary" onClick={handlleSubmit}>
+                                    Add Topic
+                                </button>
+                            </div>
+                        </form>
                     </div>
-                </div>
+                </main>
             </div>
+
         </>
     )
 }

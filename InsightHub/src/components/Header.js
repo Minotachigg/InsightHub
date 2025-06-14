@@ -52,7 +52,8 @@ const Header = () => {
                                     {/* Publish button with function submit for write page */}
                                     <button
                                         type="button"
-                                        className="btn-success px-3 py-1"
+                                        className=" btn btn-success px-3 py-1"
+                                        style={{ backgroundColor: '#0b661e' }}
                                         onClick={() => {
                                             const confirmed = window.confirm("Are you sure you want to publish this blog?")
                                             if (confirmed) {
@@ -90,8 +91,8 @@ const Header = () => {
                                     )}
                                     {user.role === 0 && (
                                         <li style={{ fontSize: '0.9rem' }}>
-                                            <Link className="dropdown-item" to={`/profile/${user._id}`}>Profile</Link>
-                                            <Link className="dropdown-item" to={`/profile/${user._id}/bookmarks`}>Bookmarks</Link>
+                                            <Link className="dropdown-item" to={`/profile`}>Profile</Link>
+                                            <Link className="dropdown-item" to={`/profile/bookmarks`}>Bookmarks</Link>
                                         </li>
                                     )}
                                     <li>
@@ -111,7 +112,7 @@ const Header = () => {
                                     <NavLink className="nav-link" to="/signin" >Sign In</NavLink>
                                 </li>
                                 <li className="nav-item">
-                                    <button className='btn btn-success'>
+                                    <button className='btn'>
                                         <Link className="nav-link text-white" to="/register">Get started</Link>
                                     </button>
                                 </li>

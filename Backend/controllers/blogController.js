@@ -7,11 +7,11 @@ exports.createBlog = async (req, res) => {
         const { title, topic, author } = req.body
         const { content_html } = req.body //  content_html is the HTML content of the blog
 
-        const blog = await Blog.create({ 
-            title, 
-            content: content_html, 
-            topic, 
-            author 
+        const blog = await Blog.create({
+            title,
+            content: content_html,
+            topic,
+            author
         })
 
         if (!blog) {
@@ -69,7 +69,7 @@ exports.updateBlog = async (req, res) => {
 
         const blog = await Blog.findByIdAndUpdate(
             req.params.id,
-            { title, content:content_html, topic, date: new Date() },
+            { title, content: content_html, topic, date: new Date() },
             { new: true }
         )
 
@@ -146,5 +146,19 @@ exports.countBlogsByTopic = async (req, res) => {
     } catch (err) {
         console.error('Error getting blog count:', err)
         res.status(500).json({ error: 'Failed to count blogs' })
+    }
+}
+
+// GET BLOGS BY TOPIC
+exports.getBlogsByTopic = async (req, res) => {
+    const { topicId } = req.params
+    try {
+        // Adjust this query to match your Blog model and topic field
+        const blogs = await Blog.find({ topic: topicId })
+        .populate('author', 'name')
+        .populate('topic', 'topic_name')
+        res.json(blogs)
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to fetch blogs by topic' })
     }
 }

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import TopicSlider from '../components/TopicSlider'
-import Card from '../components/Card'
+import TagCard from '../components/TagCard'
 import { API } from '../config'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
@@ -12,16 +12,16 @@ const TopicBlogs = () => {
     const navigate = useNavigate()
     const [activeTopic, setActiveTopic] = useState(null)
     const [topics, setTopics] = useState([])
-    const selectedTopic = topics.find(topic => topic._id === activeTopic)
     const [blogCount, setBlogCount] = useState(0)
+    const [blogs, setBlogs] = useState([])
+
+    const selectedTopic = topics.find(topic => topic._id === activeTopic)
 
     // Extract topicId from URL
     useEffect(() => {
         const queryParams = new URLSearchParams(location.search)
         const topicId = queryParams.get('topicId')
-        if (topicId) {
-            setActiveTopic(topicId)
-        }
+        if (topicId) setActiveTopic(topicId)
     }, [location])
 
     // Fetch all topics for the slider
@@ -31,17 +31,23 @@ const TopicBlogs = () => {
             .catch(err => console.error('Error fetching topics:', err))
     }, [])
 
+    // Fetch blog count for the selected topic
     useEffect(() => {
         if (activeTopic) {
             axios.get(`${API}/blogs/count/${activeTopic}`)
                 .then(res => setBlogCount(res.data.count))
-                .catch(err => {
-                    console.error('Error fetching blog count:', err)
-                    setBlogCount(0) 
-                })
+                .catch(() => setBlogCount(0))
         }
     }, [activeTopic])
-    
+
+    // Fetch blogs for the selected topic
+    useEffect(() => {
+        if (activeTopic) {
+            axios.get(`${API}/blogs/topic/${activeTopic}`)
+                .then(res => setBlogs(res.data))
+                .catch(() => setBlogs([]))
+        }
+    }, [activeTopic])
 
     const handleTopicSelect = (topicId) => {
         setActiveTopic(topicId)
@@ -56,18 +62,29 @@ const TopicBlogs = () => {
         <>
             <Header />
             <div className="container mt-3">
-                {/* Topic Slider */}
-                <TopicSlider topics={topics} onTopicSelect={handleTopicSelect} activeTopic={activeTopic} itemClassName={'text-dark explore-topic-link'} />
+                <TopicSlider
+                    topics={topics}
+                    onTopicSelect={handleTopicSelect}
+                    activeTopic={activeTopic}
+                    itemClassName="text-dark explore-topic-link"
+                />
 
-                {/* Blog Cards */}
                 <div className="text-center my-5">
-                    <div className='mb-4'>
-                    <h2>{selectedTopic?.topic_name || 'Loading topic...'}</h2>
-                        <span className='text-muted'>Topic</span> &nbsp | &nbsp
+                    <div className="mb-4">
+                        <h2>{selectedTopic?.topic_name || 'Loading topic...'}</h2>
+                        <span className="text-muted">Topic</span> &nbsp; | &nbsp;
                         <span className="text-muted">{blogCount} Stories</span>
                     </div>
-                    <div className="row py-4 w-75 m-auto border-top">
-                        <Card activeTopic={activeTopic} />
+                    <div className="row py-4 m-auto border-top">
+                        {blogs.length === 0 ? (
+                            <div className="col-12 text-center">No blogs found for this topic.</div>
+                        ) : (
+                            blogs.map(blog => (
+                                <div className="col-md-4 col-sm-6 mb-4" key={blog._id}>
+                                    <TagCard blog={blog} activeTopic={activeTopic} />
+                                </div>
+                            ))
+                        )}
                     </div>
                 </div>
             </div>

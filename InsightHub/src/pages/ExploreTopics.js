@@ -53,7 +53,7 @@ const ExploreTopics = () => {
                 {/* explore topics */}
                 <div className="text-center mt-5 mb-5">
                     <h2 className="s-1 mb-2">Explore Topics</h2>
-                    <p style={{ fontSize: '.85rem' }}>Recommended: &nbsp&nbsp
+                    <p style={{ fontSize: '.85rem' }}>Recommended: &nbsp;&nbsp;
                         {suggestedTopic.map((rt, i) => (
                             <Link key={i} to={`/tag/blogs?topicId=${rt._id}`} className="text-dark ts-link me-2" >
                                 {rt.topic_name}

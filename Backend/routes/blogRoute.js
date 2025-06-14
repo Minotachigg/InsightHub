@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const { createBlog, getBlogs, blogDetails, updateBlog, deleteBlog, getAuthorBlogs, likeBlog, countBlogsByTopic } = require('../controllers/blogController')
+const { createBlog, getBlogs, blogDetails, updateBlog, deleteBlog, getAuthorBlogs, likeBlog, countBlogsByTopic, getBlogsByTopic } = require('../controllers/blogController')
 const upload = require('../middleware/fileUpload')
 
 router.post('/createblog', upload.array('files'), createBlog)
@@ -11,6 +11,7 @@ router.delete('/deleteblog/:id', deleteBlog)
 router.get('/blogs/user/:userId', getAuthorBlogs)
 router.put('/likeblog/:id', likeBlog)
 router.get('/blogs/count/:topicId', countBlogsByTopic)
+router.get('/blogs/topic/:topicId', getBlogsByTopic)
 
 
 module.exports = router

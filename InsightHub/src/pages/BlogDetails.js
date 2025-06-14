@@ -2,17 +2,20 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { API } from '../config'
 import { useParams } from 'react-router-dom'
-import { FaBookReader } from "react-icons/fa"
+import { FaBookReader, FaRegBookmark } from "react-icons/fa"
 import { PiHandsClappingBold } from "react-icons/pi"
 import { formatNumber } from '../utils/FormatNumber'
 import { toast, ToastContainer } from 'react-toastify'
 import ProfileIcon from '../components/ProfileIcon'
+import { isAuthenticated } from '../auth'
 
 const BlogDisplay = () => {
     // for routing like /blog/:blogId
     const { blogId } = useParams()
     const [blog, setBlog] = useState(null)
     const [hasClapped, setHasClapped] = useState(false)
+    const { user, token } = isAuthenticated()
+    const [hasBookmarked, setHasBookmarked] = useState(false)
 
     useEffect(() => {
         const fetchBlog = async () => {
@@ -30,6 +33,10 @@ const BlogDisplay = () => {
         // Check if the user has already clapped for this blog
         const clapped = localStorage.getItem(`clapped_${blogId}`)
         setHasClapped(!!clapped)
+
+        // Check if the user has already bookmarked this blog
+        const bookmarked = localStorage.getItem(`bookmarked_${blogId}`)
+        setHasBookmarked(!!bookmarked)
     }, [blogId])
 
     const handleClap = async (blogId) => {
@@ -48,6 +55,29 @@ const BlogDisplay = () => {
         }
     }
 
+    const handleBookmark = async (blogId) => {
+        const userId = user._id
+
+        try {
+            if (!hasBookmarked) {
+                await axios.put(`${API}/users/${userId}/bookmark/${blogId}`, {},
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        }
+                    })
+                toast.success("Bookmarked!")
+                setHasBookmarked(true)
+                localStorage.setItem(`bookmarked_${blogId}`, 'true')
+            } else {
+                toast.error("You have already bookmarked this blog!")
+            }
+        } catch (err) {
+            console.error(err)
+            toast.error("Failed to bookmark")
+        }
+    }
+
     if (!blog) return <div>Loading...</div>
 
     return (
@@ -58,15 +88,20 @@ const BlogDisplay = () => {
                 <div className='text-muted d-flex align-items-center gap-2 mb-3'>
                     <ProfileIcon name={blog.author.name} style={{ fontSize: '15px', width: '1.5rem', height: '1.5rem' }} />
                     {blog.author.name}
-                    &nbsp -  &nbsp
+                    &nbsp; -  &nbsp;
                     {new Date(blog.date).toLocaleDateString()}
                 </div>
-                <p className="text-muted border-top border-bottom d-flex align-items-center p-2">
-                    &nbsp&nbsp
-                    <span title={`${blog.views} Views`}> <FaBookReader size={15} /> {formatNumber(blog.views)} </span>
-                    &nbsp&nbsp - &nbsp&nbsp
-                    <button className='btn p-0' title={`${blog.claps} Claps`} onClick={() => handleClap(blog._id)}>
-                        <PiHandsClappingBold size={18} /> {formatNumber(blog.claps)}
+                <p className="text-muted border-top border-bottom d-flex align-items-center justify-content-between p-2">
+                    <div>
+                        &nbsp;&nbsp;
+                        <span title={`${blog.views} Views`}> <FaBookReader size={15} /> {formatNumber(blog.views)} </span>
+                        &nbsp;&nbsp; - &nbsp;&nbsp;
+                        <button className='btn p-0' title={`${blog.claps} Claps`} onClick={() => handleClap(blog._id)}>
+                            <PiHandsClappingBold size={18} /> {formatNumber(blog.claps)}
+                        </button>
+                    </div>
+                    <button className="btn bookmark-btn" onClick={() => handleBookmark(blog._id)} title="Bookmark">
+                        <FaRegBookmark size={18} />
                     </button>
                 </p>
 
