@@ -30,7 +30,6 @@ const MyRoute = () => {
                 {/* Public routes */}
                 <Route path="/" element={<Layouts />}>
                     <Route index element={<Landing />} />
-                    <Route path="blog/:blogId" element={<BlogDetails />} />
                 </Route>
 
                 <Route path="signin" element={<Login />} />
@@ -40,6 +39,9 @@ const MyRoute = () => {
 
                 {/* Protected routes wrapped in PrivateRoute */}
                 <Route element={<PrivateRoute />}>
+                    <Route path="/" element={<Layouts />}>
+                        <Route path="blog/:blogId" element={<BlogDetails />} />
+                    </Route>
                     <Route path="home" element={<HomePage />} />
                     <Route path="write" element={<Write />} />
                     <Route path="profile/*" element={<Profile />} />
