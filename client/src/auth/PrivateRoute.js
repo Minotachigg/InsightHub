@@ -2,12 +2,11 @@ import React from 'react'
 import { Navigate, Outlet } from 'react-router-dom'
 import { isAuthenticated } from '.'
 
-const PrivateRoute = () => (
+const PrivateRoute = () => {
+    const auth = isAuthenticated()
+    const user = auth?.user
 
-    isAuthenticated() && isAuthenticated().user.role === 0 || isAuthenticated().user.role === 1 ?
-        <Outlet /> : (
-            <Navigate to='/signin' />
-        )
-)
+    return user ? <Outlet /> : <Navigate to="/signin" />
+}
 
 export default PrivateRoute
