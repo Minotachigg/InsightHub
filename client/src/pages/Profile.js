@@ -76,9 +76,9 @@ const Profile = () => {
                             <div className="mt-3">
                                 <h5 className="mb-3 text-capitalize fs-4">{name}</h5>
                                 <p> {email} </p>
-                                <Link to="/profile/edit" className="mt-2 text-success" style={{ fontSize: '13px' }}>
+                                {/* <Link to="/profile/edit" className="mt-2 text-success" style={{ fontSize: '13px' }}>
                                     Edit Profile
-                                </Link>
+                                </Link> */}
                             </div>
                         </div>
 

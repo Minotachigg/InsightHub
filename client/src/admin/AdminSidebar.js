@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
-import { FaBars, FaUsers } from "react-icons/fa"
+import { FaBars, FaUsers, FaHome } from "react-icons/fa"
 import { IoSpeedometerOutline } from "react-icons/io5"
 import { GrArticle } from "react-icons/gr"
 import { MdOutlineFormatColorText, MdOutlineTextIncrease, MdLogout } from "react-icons/md"
@@ -48,8 +48,12 @@ const AdminSidebar = () => {
                 <NavLink to="/admin/users" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
                     <FaUsers size={20}/> <span className="nav-label">Users</span>
                 </NavLink>
+                <hr className='text-white' />
                 <NavLink to="/signin"  className="nav-link" onClick={handleLogout}>
                     <MdLogout size={20}/> <span className="nav-label">Logout</span>
+                </NavLink>
+                <NavLink to="/home" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
+                    <FaHome size={20}/> <span className="nav-label">Go to Homepage</span>
                 </NavLink>
             </div>
 

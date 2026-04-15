@@ -4,7 +4,7 @@ import { isAuthenticated } from '.'
 
 const PrivateRoute = () => (
 
-    isAuthenticated() && isAuthenticated().user.role === 0 ?
+    isAuthenticated() && isAuthenticated().user.role === 0 || isAuthenticated().user.role === 1 ?
         <Outlet /> : (
             <Navigate to='/signin' />
         )
