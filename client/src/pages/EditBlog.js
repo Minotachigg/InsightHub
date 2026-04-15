@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
 import axios from 'axios'
-import { API } from '../config'
 import Header from '../components/Header'
 import { isAuthenticated } from '../auth'
 import { toast, ToastContainer } from 'react-toastify'
@@ -15,6 +14,7 @@ import { FaImage } from "react-icons/fa"
 import { PiHighlighterDuotone } from "react-icons/pi"
 
 const EditBlog = () => {
+    const API = process.env.REACT_APP_API_URL;
     const { blogId } = useParams()
     const navigate = useNavigate()
     const [title, setTitle] = useState('')

@@ -1,11 +1,10 @@
 import React, { useState, useEffect, } from 'react'
 import { FaTrash } from "react-icons/fa6"
 import axios from 'axios'
-import { API } from '../config'
 import AdminSidebar from './AdminSidebar'
 
 const Topics = () => {
-
+    const API = process.env.REACT_APP_API_URL;
     const [topics, setTopics] = useState([])
     const [deleteId, setDeleteId] = useState(null)
     const [showConfirm, setShowConfirm] = useState(false)

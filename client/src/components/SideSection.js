@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { FaRegBookmark } from "react-icons/fa"
-import { API } from '../config'
 import axios from 'axios'
 import ProfileIcon from './ProfileIcon'
 
 const SideSection = () => {
+    const API = process.env.REACT_APP_API_URL;
     const [topics, setTopics] = useState([])
     const [blogs, setBlogs] = useState([])
 

@@ -1,9 +1,9 @@
 import React, { useState, useEffect} from 'react'
 import { data, useParams } from 'react-router-dom'
-import { API } from '../config'
 import { Link } from 'react-router-dom'
 
 const EmailVerify = () => {
+    const API = process.env.REACT_APP_API_URL;
     const params = useParams()
     const [values, setValues] = useState({
         error: '',

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import { API } from '../config'
 import { Link, useNavigate } from 'react-router-dom'
 import TopicSlider from '../components/TopicSlider'
 
 const ExploreTopics = () => {
+    const API = process.env.REACT_APP_API_URL;
     const [topics, setTopics] = useState([])
     const [sliderTopics, setSliderTopics] = useState([])
     const [suggestedTopic, setSuggestedTopic] = useState([])

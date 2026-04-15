@@ -2,12 +2,14 @@ import React from 'react'
 import { FaBookReader, FaRegBookmark } from "react-icons/fa"
 import { PiHandsClappingBold } from "react-icons/pi"
 import { Link } from 'react-router-dom'
-import { API, IMG_URL } from '../config'
 import ProfileIcon from './ProfileIcon'
 import { formatNumber } from '../utils/FormatNumber'
 import { toast, ToastContainer } from 'react-toastify'
 import { isAuthenticated } from '../auth'
 import axios from 'axios'
+
+const API = process.env.REACT_APP_API_URL;
+const IMG_URL = process.env.REACT_APP_API_IMG_URL;
 
 const TagCard = ({ blog, activeTopic }) => {
 

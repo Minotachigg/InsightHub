@@ -5,9 +5,9 @@ import TopicSlider from '../components/TopicSlider'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import axios from 'axios'
-import { API } from '../config'
 
 const HomePage = () => {
+  const API = process.env.REACT_APP_API_URL;
   const [topics, setTopics] = useState([])
   const [activeTopic, setActiveTopic] = useState(null)
 

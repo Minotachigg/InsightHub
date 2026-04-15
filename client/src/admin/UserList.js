@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import { API } from '../config'
 import AdminSidebar from './AdminSidebar'
 import { isAuthenticated } from '../auth'
 
 const UserList = () => {
+    const API = process.env.REACT_APP_API_URL;
     const [users, setUsers] = useState([])
     const { token } = isAuthenticated()
 

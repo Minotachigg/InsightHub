@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { FaBookReader, FaRegBookmark } from "react-icons/fa"
 import { PiHandsClappingBold } from "react-icons/pi"
 import { Link } from 'react-router-dom'
-import { API, IMG_URL } from '../config'
 import axios from 'axios'
 import ProfileIcon from './ProfileIcon'
 import { isAuthenticated } from '../auth'
@@ -10,6 +9,8 @@ import { formatNumber } from '../utils/FormatNumber'
 import { toast, ToastContainer } from 'react-toastify'
 
 const DISPLAY_SIZE = 10
+const API = process.env.REACT_APP_API_URL;
+const IMG_URL = process.env.REACT_APP_API_IMG_URL;
 
 const Card = ({ activeTopic }) => {
   const [allBlogs, setAllBlogs] = useState([])

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { FaTrash } from "react-icons/fa6"
 import axios from 'axios'
-import { API } from '../config'
 import AdminSidebar from './AdminSidebar'
 import { Link } from 'react-router-dom'
 
 const Bloglist = () => {
+  const API = process.env.REACT_APP_API_URL;
   const [blogs, setBlogs] = useState([])
   const [loading, setLoading] = useState(true)
   const [deleteId, setDeleteId] = useState(null)

@@ -1,7 +1,7 @@
-import { API } from "../config"
 
 // SIGNUP
 export const signup = (user) => {
+    const API = process.env.REACT_APP_API_URL;
     return fetch(`${API}/register`, {
         method: "POST",
         headers: {
@@ -20,6 +20,7 @@ export const signup = (user) => {
 
 // SIGNIN
 export const signin = (user) => {
+    const API = process.env.REACT_APP_API_URL;
     return fetch(`${API}/signin`, {
         method: "POST",
         headers: {

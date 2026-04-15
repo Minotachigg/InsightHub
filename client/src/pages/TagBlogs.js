@@ -3,11 +3,11 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import TopicSlider from '../components/TopicSlider'
 import TagCard from '../components/TagCard'
-import { API } from '../config'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 
 const TopicBlogs = () => {
+    const API = process.env.REACT_APP_API_URL;
     const location = useLocation()
     const navigate = useNavigate()
     const [activeTopic, setActiveTopic] = useState(null)

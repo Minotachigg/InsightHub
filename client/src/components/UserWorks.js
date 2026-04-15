@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
-import { API, IMG_URL } from '../config'
 import { isAuthenticated } from '../auth'
 import { PiDotsThreeOutlineFill } from "react-icons/pi"
 import { toast, ToastContainer } from 'react-toastify'
+
+const API = process.env.REACT_APP_API_URL;
+const IMG_URL = process.env.REACT_APP_API_IMG_URL;
 
 const UserWorks = () => {
     const [userBlogs, setUserBlogs] = useState([])

@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
 import axios from 'axios'
-import { API } from '../config'
 import Header from '../components/Header'
 import { isAuthenticated } from '../auth'
 import { toast, ToastContainer } from 'react-toastify'
@@ -15,6 +14,7 @@ import Underline from '@tiptap/extension-underline'
 import Highlight from '@tiptap/extension-highlight'
 
 const Write = () => {
+    const API = process.env.REACT_APP_API_URL;
     const [title, setTitle] = useState('')
     const [topic, setTopic] = useState('')
     const [topicList, setTopicList] = useState([])

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-import { API } from '../config'
 import { useParams } from 'react-router-dom'
 import { FaBookReader, FaRegBookmark } from "react-icons/fa"
 import { PiHandsClappingBold } from "react-icons/pi"
@@ -10,6 +9,7 @@ import ProfileIcon from '../components/ProfileIcon'
 import { isAuthenticated } from '../auth'
 
 const BlogDisplay = () => {
+    const API = process.env.REACT_APP_API_URL;
     // for routing like /blog/:blogId
     const { blogId } = useParams()
     const [blog, setBlog] = useState(null)

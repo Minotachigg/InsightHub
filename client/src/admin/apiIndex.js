@@ -1,7 +1,6 @@
-import { API } from "../config"
-
 // ADD TOPIC
 export const addTopic = ( token, topic) => {
+    const API = process.env.REACT_APP_API_URL;
     return fetch(`${API}/posttopic`, {
         method: 'POST',
         headers: {
