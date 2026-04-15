@@ -20,6 +20,10 @@ const imageRoute = require('./routes/imageRoute')
 app.use(morgan('dev'))
 app.use(bodyParser.json())
 app.use(cors())
+app.use(cors({
+  origin: "https://your-frontend.onrender.com",
+  credentials: true
+}));
 
 app.use('/public/uploads', express.static('public/uploads'))
 
