@@ -59,6 +59,7 @@ export const isAuthenticated = () => {
 
 // LOGOUT
 export const signout = (next) => {
+    const API = process.env.REACT_APP_API_URL;
     if (typeof window !== "undefined") {
         localStorage.removeItem("jwt", JSON.stringify("jwt"))
         next()
@@ -74,6 +75,7 @@ export const signout = (next) => {
 
 // FORGOT PASSWORD
 export const ForgotPassword = (email) => {
+    const API = process.env.REACT_APP_API_URL;
     return fetch(`${API}/forgetpassword`, {
         method: "POST",
         headers: {
@@ -92,6 +94,7 @@ export const ForgotPassword = (email) => {
 
 // RESET PASSWORD
 export const ResetPassword = (password, token) => {
+    const API = process.env.REACT_APP_API_URL;
     return fetch(`${API}/resetpassword/${token}`, {
         method: "PUT",
         headers: {
