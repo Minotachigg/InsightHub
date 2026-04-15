@@ -31,3 +31,6 @@ app.use('/api', imageRoute)
 app.listen(port, ()=>{
     console.log(`server started at port ${port}`)
 })
+app.get("/", (req, res) => {
+  res.send("InsightHub API is running 🚀");
+});
