@@ -2,7 +2,7 @@
 // SIGNUP
 export const signup = (user) => {
     const API = process.env.REACT_APP_API_URL;
-    return fetch(`${API}/api/register`, {
+    return fetch(`${API}/register`, {
         method: "POST",
         headers: {
             Accept: "application/json",
@@ -21,7 +21,7 @@ export const signup = (user) => {
 // SIGNIN
 export const signin = (user) => {
     const API = process.env.REACT_APP_API_URL;
-    return fetch(`${API}/api/signin`, {
+    return fetch(`${API}/signin`, {
         method: "POST",
         headers: {
             Accept: "application/json",
@@ -63,7 +63,7 @@ export const signout = (next) => {
     if (typeof window !== "undefined") {
         localStorage.removeItem("jwt", JSON.stringify("jwt"))
         next()
-        return fetch(`${API}/api/signout`, {
+        return fetch(`${API}/signout`, {
             method: "POST",
         })
             .then((res) => {
@@ -76,7 +76,7 @@ export const signout = (next) => {
 // FORGOT PASSWORD
 export const ForgotPassword = (email) => {
     const API = process.env.REACT_APP_API_URL;
-    return fetch(`${API}/api/forgetpassword`, {
+    return fetch(`${API}/forgetpassword`, {
         method: "POST",
         headers: {
             Accept: "application/json",
@@ -95,7 +95,7 @@ export const ForgotPassword = (email) => {
 // RESET PASSWORD
 export const ResetPassword = (password, token) => {
     const API = process.env.REACT_APP_API_URL;
-    return fetch(`${API}/api/resetpassword/${token}`, {
+    return fetch(`${API}/resetpassword/${token}`, {
         method: "PUT",
         headers: {
             Accept: "application/json",
