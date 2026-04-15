@@ -1,5 +1,6 @@
 import React from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+
 import Layouts from './components/Layouts'
 import Landing from './pages/Landing'
 import Login from './pages/Login'
@@ -27,47 +28,44 @@ const MyRoute = () => {
     return (
         <Router>
             <Routes>
-                {/* Public routes */}
+
+                {/* PUBLIC LAYOUT */}
                 <Route path="/" element={<Layouts />}>
                     <Route index element={<Landing />} />
+                    <Route path="blog/:blogId" element={<BlogDetails />} />
+                    <Route path="exploretopics" element={<TopicList />} />
                 </Route>
 
+                {/* PUBLIC AUTH ROUTES */}
                 <Route path="signin" element={<Login />} />
                 <Route path="register" element={<Register />} />
                 <Route path="forgotpassword" element={<ForgotPasswordPage />} />
                 <Route path="resetpassword/:token" element={<ResetPasswordPage />} />
+                <Route path="email/confirmation/:token" element={<EmailVerify />} />
 
-                {/* Protected routes wrapped in PrivateRoute */}
+                {/* PRIVATE ROUTES */}
                 <Route element={<PrivateRoute />}>
-                    <Route path="/" element={<Layouts />}>
-                        <Route path="blog/:blogId" element={<BlogDetails />} />
-                    </Route>
                     <Route path="home" element={<HomePage />} />
                     <Route path="write" element={<Write />} />
                     <Route path="profile/*" element={<Profile />} />
-                    <Route path="email/confirmation/:token" element={<EmailVerify />} />
-                    <Route path='tag/blogs' element={<TopicBlogs />} />
-                    <Route path='edit/:blogId' element={<EditBlog />} />
-
-                    <Route path="/" element={<Layouts />}>
-                        <Route path='exploretopics' element={<TopicList />} />
-                    </Route>
+                    <Route path="tag/blogs" element={<TopicBlogs />} />
+                    <Route path="edit/:blogId" element={<EditBlog />} />
                 </Route>
 
-                {/* Admin routes */}
+                {/* ADMIN ROUTES */}
                 <Route path="/admin" element={<AdminRoute />}>
                     <Route path="dashboard" element={<Dashboard />} />
                     <Route path="addtopic" element={<AddTopic />} />
                     <Route path="topiclist" element={<Topics />} />
-                    <Route path='users' element={<UserList />} />
+                    <Route path="users" element={<UserList />} />
                     <Route path="bloglist" element={<Bloglist />} />
                 </Route>
 
-                {/* Catch all */}
-                <Route path="/*" element={<NotFound />} />
+                {/* CATCH ALL */}
+                <Route path="*" element={<NotFound />} />
+
             </Routes>
         </Router>
-
     )
 }
 
