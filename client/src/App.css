@@ -28,11 +28,13 @@ a {
 .nav {
   align-items: center;
 }
-#logo {
-  font-family: "Oswald", sans-serif;
-}
-.nav-link {
+
+.nav-link, .navbar-brand {
   color: #000000;
+}
+.navbar-brand {
+  font-size: 1.5rem;
+  font-family: "Oswald", sans-serif;
 }
 .nav-item button {
   padding: 0;
