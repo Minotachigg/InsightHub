@@ -15,7 +15,7 @@ const userRoute = require('./routes/userRoute')
 const topicRoute = require('./routes/topicRoute')
 const imageRoute = require('./routes/imageRoute')
 
-const port = process.env.PORT || 5000
+const port = process.env.PORT || 8000
 
 // =========================
 // MIDDLEWARES
