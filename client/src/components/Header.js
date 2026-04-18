@@ -18,7 +18,7 @@ const Header = () => {
 
   return (
     <div className="px-5">
-      <nav className="navbar navbar-expand-lg border-bottom px-5">
+      <nav className="navbar navbar-expand-lg border-bottom px-3 px-md-5">
         {/* LOGO */}
         <Link className="navbar-brand fw-bold" to={user ? "/home" : "/"}>
           InsightHub
@@ -79,7 +79,7 @@ const Header = () => {
             {user && (
               <li className="nav-item position-relative">
                 <button
-                  className="btn nav-link d-flex align-items-center gap-1"
+                  className="btn nav-link d-flex align-items-center gap-1 bg-transparent"
                   onClick={() => setDropdownOpen(!dropdownOpen)}
                 >
                   <ProfileIcon

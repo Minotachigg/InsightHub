@@ -205,12 +205,12 @@ const Write = () => {
                     </div>
 
                     {/* Editor */}
-                    <div className="form-group mb-4 position-relative">
+                    <div className="form-group mb-2 position-relative">
                         <label htmlFor="content" className="text-muted position-absolute fst-italic" style={{ left: '-6rem', top: '0%', transform: 'translateY(-50%)' }}>
                             Content Start
                         </label>
                         <div
-                            className="content-box px-5 border-0"
+                            className="content-box px-5 borderr-bottom-gray"
                             style={{
                                 minHeight: '2rem',
                                 padding: '10px',
