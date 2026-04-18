@@ -1,71 +1,76 @@
-import React, { useState, useEffect } from "react";
-import { FaBookReader, FaRegBookmark } from "react-icons/fa";
-import { PiHandsClappingBold } from "react-icons/pi";
-import { Link } from "react-router-dom";
-import axios from "axios";
-import ProfileIcon from "./ProfileIcon";
-import { isAuthenticated } from "../auth";
-import { formatNumber } from "../utils/FormatNumber";
-import { toast, ToastContainer } from "react-toastify";
+import React, { useState, useEffect } from "react"
+import { FaBookReader, FaRegBookmark } from "react-icons/fa"
+import { PiHandsClappingBold } from "react-icons/pi"
+import { Link } from "react-router-dom"
+import axios from "axios"
+import ProfileIcon from "./ProfileIcon"
+import { isAuthenticated } from "../auth"
+import { formatNumber } from "../utils/FormatNumber"
+import { toast, ToastContainer } from "react-toastify"
 
-const DISPLAY_SIZE = 10;
-const API = process.env.REACT_APP_API_URL;
-const IMG_URL = process.env.REACT_APP_API_IMG_URL;
+const DISPLAY_SIZE = 10
+const API = process.env.REACT_APP_API_URL
+const IMG_URL = process.env.REACT_APP_API_IMG_URL
 
 const Card = ({ activeTopic }) => {
-  const [allBlogs, setAllBlogs] = useState([]);
-  const [visibleBlogs, setVisibleBlogs] = useState([]);
-  const { user, token } = isAuthenticated();
-  const [bookmarkedBlogs, setBookmarkedBlogs] = useState({});
+  const [allBlogs, setAllBlogs] = useState([])
+  const [visibleBlogs, setVisibleBlogs] = useState([])
+  const { user, token } = isAuthenticated()
+  const [bookmarkedBlogs, setBookmarkedBlogs] = useState({})
 
-  // Fetch blogs based on activeTopic
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        let res;
+        let res
+
         if (activeTopic) {
-          res = await axios.get(`${API}/blogs/topic/${activeTopic}`);
+          res = await axios.get(`${API}/blogs/topic/${activeTopic}`)
         } else {
-          res = await axios.get(`${API}/bloglist`);
+          res = await axios.get(`${API}/bloglist`)
         }
-        // Shuffle for "For You" (no topic), otherwise just use as is
+
         const blogs = activeTopic
           ? res.data
-          : [...res.data].sort(() => Math.random() - 0.5);
-        setAllBlogs(blogs);
-        setVisibleBlogs(blogs.slice(0, DISPLAY_SIZE));
-        // Set bookmark status
-        const bookmarkStatus = {};
+          : [...res.data].sort(() => Math.random() - 0.5)
+
+        setAllBlogs(blogs)
+        setVisibleBlogs(blogs.slice(0, DISPLAY_SIZE))
+
+        const bookmarkStatus = {}
         blogs.forEach((blog) => {
           bookmarkStatus[blog._id] = !!localStorage.getItem(
             `bookmarked_${blog._id}`,
-          );
-        });
-        setBookmarkedBlogs(bookmarkStatus);
-      } catch (err) {
-        console.log(err);
-        setAllBlogs([]);
-        setVisibleBlogs([]);
-        setBookmarkedBlogs({});
-      }
-    };
-    fetchBlogs();
-  }, [activeTopic]);
+          )
+        })
 
-  // Handle View More
+        setBookmarkedBlogs(bookmarkStatus)
+      } catch (err) {
+        console.log(err)
+        setAllBlogs([])
+        setVisibleBlogs([])
+        setBookmarkedBlogs({})
+      }
+    }
+
+    fetchBlogs()
+  }, [activeTopic])
+
   const handleViewMore = () => {
-    const alreadyShownIds = new Set(visibleBlogs.map((blog) => blog._id));
-    const remaining = allBlogs.filter((blog) => !alreadyShownIds.has(blog._id));
-    const nextBatch = remaining.slice(0, DISPLAY_SIZE);
-    setVisibleBlogs((prev) => [...prev, ...nextBatch]);
-  };
+    const alreadyShownIds = new Set(visibleBlogs.map((blog) => blog._id))
+    const remaining = allBlogs.filter((blog) => !alreadyShownIds.has(blog._id))
+    const nextBatch = remaining.slice(0, DISPLAY_SIZE)
+
+    setVisibleBlogs((prev) => [...prev, ...nextBatch])
+  }
 
   const handleBookmark = async (blogId) => {
-    const userId = user._id;
+    const userId = user._id
+
     if (bookmarkedBlogs[blogId]) {
-      toast.error("You have already bookmarked this blog!");
-      return;
+      toast.error("You have already bookmarked this blog!")
+      return
     }
+
     try {
       await axios.put(
         `${API}/users/${userId}/bookmark/${blogId}`,
@@ -75,40 +80,41 @@ const Card = ({ activeTopic }) => {
             Authorization: `Bearer ${token}`,
           },
         },
-      );
-      toast.success("Bookmarked!");
-      setBookmarkedBlogs((prev) => ({ ...prev, [blogId]: true }));
-      localStorage.setItem(`bookmarked_${blogId}`, "true");
+      )
+
+      toast.success("Bookmarked!")
+
+      setBookmarkedBlogs((prev) => ({
+        ...prev,
+        [blogId]: true,
+      }))
+
+      localStorage.setItem(`bookmarked_${blogId}`, "true")
     } catch (err) {
-      console.error(err);
-      toast.error("Failed to bookmark");
+      console.error(err)
+      toast.error("Failed to bookmark")
     }
-  };
+  }
 
   return (
     <>
       <ToastContainer position="bottom-right" theme="colored" />
+
       <div className="container-fluid container-md">
         {visibleBlogs && visibleBlogs.length > 0 ? (
           visibleBlogs.map((blog, i) => {
             const previewText = blog.content
               ? blog.content.replace(/<[^>]*>?/gm, "").slice(0, 100)
-              : "";
+              : ""
 
+            // ✅ FIXED: correct image extraction (no key changes)
             const firstImage = blog.content
               ? blog.content.match(/<img[^>]+src=["']([^"'>]+)["']/)
-              : null;
+              : null
 
-            const baseUrl = IMG_URL?.replace(/\/$/, "");
+            const imageSrc = firstImage ? firstImage[1] : null
 
-            <img
-              src={
-                firstImage.startsWith("http")
-                  ? firstImage
-                  : `${baseUrl}${firstImage.startsWith("/") ? "" : "/"}${firstImage}`
-              }
-              alt="Blog"
-            />;
+            const baseUrl = IMG_URL?.replace(/\/$/, "")
 
             return (
               <div key={i} className="border-bottom py-4">
@@ -123,8 +129,7 @@ const Card = ({ activeTopic }) => {
                     }}
                   />
                   <span className="ms-2">
-                    {" "}
-                    In <b>{blog.topic.topic_name} </b> by
+                    In <b>{blog.topic.topic_name}</b> by
                   </span>
                   <b className="ms-2 text-capitalize">{blog.author.name}</b>
                 </div>
@@ -145,18 +150,18 @@ const Card = ({ activeTopic }) => {
                               : previewText}
                           </p>
                         </div>
+
                         <div className="col-md-3 d-flex align-items-center">
-                          {firstImage && (
+                          {imageSrc && (
                             <img
                               src={
-                                firstImage.startsWith("http")
-                                  ? firstImage
-                                  : `${IMG_URL}/${firstImage}`
+                                imageSrc.startsWith("http")
+                                  ? imageSrc
+                                  : `${baseUrl}/${imageSrc.replace(/^\/+/, "")}`
                               }
                               alt="Blog Preview"
                               className="img-fluid rounded w-100"
                               style={{
-                                width: "100%",
                                 maxHeight: "120px",
                                 objectFit: "cover",
                               }}
@@ -165,6 +170,7 @@ const Card = ({ activeTopic }) => {
                         </div>
                       </div>
                     </Link>
+
                     <div className="col-md-8 ps-3 d-flex justify-content-between text-muted small">
                       <div className="d-flex justify-content-between gap-4 text-center align cursor-pointer">
                         <span>
@@ -173,17 +179,17 @@ const Card = ({ activeTopic }) => {
                             day: "numeric",
                           })}
                         </span>
+
                         <span title={`${blog.views} Views`}>
-                          {" "}
-                          <FaBookReader size={15} />{" "}
-                          {formatNumber(blog.views)}{" "}
+                          <FaBookReader size={15} /> {formatNumber(blog.views)}
                         </span>
+
                         <span title={`${blog.claps} Claps`}>
-                          {" "}
                           <PiHandsClappingBold size={18} />{" "}
-                          {formatNumber(blog.claps)}{" "}
+                          {formatNumber(blog.claps)}
                         </span>
                       </div>
+
                       <button
                         className="btn bookmark-btn"
                         onClick={() => handleBookmark(blog._id)}
@@ -195,7 +201,7 @@ const Card = ({ activeTopic }) => {
                   </div>
                 </div>
               </div>
-            );
+            )
           })
         ) : (
           <p className="text-center text-muted">No blogs found.</p>
@@ -210,7 +216,7 @@ const Card = ({ activeTopic }) => {
         )}
       </div>
     </>
-  );
-};
+  )
+}
 
-export default Card;
+export default Card
