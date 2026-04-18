@@ -6,10 +6,11 @@ exports.createBlog = async (req, res) => {
     try {
         const { title, topic, author } = req.body
         const { content_html } = req.body //  content_html is the HTML content of the blog
-
+        // only adding the img url after /public/
+        const cleaned_content = content_html.replaceAll("http://localhost:8000","")
         const blog = await Blog.create({
             title,
-            content: content_html,
+            content: cleaned_content,
             topic,
             author
         })
@@ -66,10 +67,11 @@ exports.updateBlog = async (req, res) => {
     try {
         const { title, topic } = req.body
         const { content_html } = req.body
+        const cleaned_content = content_html.replaceAll("http://localhost:8000","")
 
         const blog = await Blog.findByIdAndUpdate(
             req.params.id,
-            { title, content: content_html, topic, date: new Date() },
+            { title, content: cleaned_content, topic, date: new Date() },
             { new: true }
         )
 
