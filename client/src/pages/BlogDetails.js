@@ -109,17 +109,17 @@ const BlogDisplay = () => {
             style={{ fontSize: "15px", width: "1.5rem", height: "1.5rem" }}
           />
           {blog.author.name}
-          &nbsp - &nbsp
+          &nbsp; - &nbsp;
           {new Date(blog.date).toLocaleDateString()}
         </div>
         <p className="text-muted border-top border-bottom d-flex align-items-center justify-content-between p-2">
           <div>
-            &nbsp&nbsp
+            &nbsp;&nbsp;
             <span title={`${blog.views} Views`}>
               {" "}
               <FaBookReader size={15} /> {formatNumber(blog.views)}{" "}
             </span>
-            &nbsp&nbsp - &nbsp&nbsp
+            &nbsp;&nbsp; - &nbsp;&nbsp;
             <button
               className="btn p-0"
               title={`${blog.claps} Claps`}
