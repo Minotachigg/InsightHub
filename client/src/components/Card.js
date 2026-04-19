@@ -107,7 +107,6 @@ const Card = ({ activeTopic }) => {
               ? blog.content.replace(/<[^>]*>?/gm, "").slice(0, 100)
               : ""
 
-            // ✅ FIXED: correct image extraction (no key changes)
             const firstImage = blog.content
               ? blog.content.match(/<img[^>]+src=["']([^"'>]+)["']/)
               : null
